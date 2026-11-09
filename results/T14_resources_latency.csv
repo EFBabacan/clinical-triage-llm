@@ -1,0 +1,17 @@
+config,model,method,precision,hardware,split,n,prompt_tokens_mean,latency_s_per_record,inference_min,prompt_tokens_per_s,training_h,timing_source
+qwen_zero,Qwen3.5-4B,zero-shot,4-bit NF4,RTX 4060 8 GB,test,1650,864.5,1.467,40.3,589.0,,per-record timing
+qwen_zero_val,Qwen3.5-4B,zero-shot,4-bit NF4,RTX 4060 8 GB,val,550,864.7,1.456,13.3,594.0,,per-record timing
+qwen_fs_comp_val_4060,Qwen3.5-4B,"few-shot, compressed (33 ex.)",4-bit NF4,RTX 4060 8 GB,val,550,2016.2,2.875,26.4,701.0,,per-record timing
+qwen_fs_comp_val_a100,Qwen3.5-4B,"few-shot, compressed (33 ex.)",4-bit NF4,A100 80 GB,val,550,2027.6,1.203,11.0,1686.0,,per-record timing
+qwen_fs_comp,Qwen3.5-4B,"few-shot, compressed (33 ex.)",4-bit NF4,A100 80 GB,test,1650,2023.6,1.118,30.8,1810.0,,per-record timing
+qwen_fs_full_val,Qwen3.5-4B,"few-shot, full (33 ex.)",4-bit NF4,A100 80 GB,val,550,23785.8,,,,,not recorded
+qwen_fs_full,Qwen3.5-4B,"few-shot, full (33 ex.)",4-bit NF4,A100 80 GB,test,1650,23786.1,4.709,129.5,5051.0,,per-record timing
+qwen_qlora,Qwen3.5-4B,"QLoRA fair (r=8, q/v, 2 ep.)",4-bit NF4,RTX 4060 8 GB,test,1650,677.9,1.621,44.6,418.0,9.1,per-record timing
+qwen_qlora_trunc,Qwen3.5-4B,"QLoRA fair, truncated evaluation input (ablation)",4-bit NF4,RTX 4060 8 GB,test,1650,397.9,,,,,not recorded
+gemma_zero_val_bf16,Gemma-4-E4B,zero-shot,bf16,A100 80 GB,val,550,843.8,,,,,not recorded
+gemma_zero_val_4bit,Gemma-4-E4B,zero-shot,4-bit NF4,A100 80 GB,val,550,843.8,,,,,not recorded
+gemma_zero_bf16,Gemma-4-E4B,zero-shot,bf16,A100 80 GB,test,1650,843.6,,,,,not recorded
+gemma_zero_4bit,Gemma-4-E4B,zero-shot,4-bit NF4,A100 80 GB,test,1650,843.6,,,,,not recorded
+gemma_fs_full,Gemma-4-E4B,"few-shot, full (33 ex.)",bf16,A100 80 GB,test,1650,23479.6,,,,,not recorded
+gemma_qlora_fair,Gemma-4-E4B,"QLoRA fair (r=8, q/v, 2 ep.)",4-bit NF4,A100 80 GB,test,1650,670.5,0.821,22.6,816.0,,per-record timing
+gemma_qlora_opt,Gemma-4-E4B,"QLoRA optimized (r=16, all linear, 3 ep.)",4-bit NF4,A100 80 GB,test,1650,,,,,,not recorded

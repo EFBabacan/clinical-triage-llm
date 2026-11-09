@@ -1,0 +1,21 @@
+comparison,a,b,split,acc_a,acc_b,diff_points,a_right_b_wrong,a_wrong_b_right,p_exact,p_holm,significant_holm_0.05
+"QLoRA gain, Qwen",qwen_qlora,qwen_zero,test,0.6424,0.5152,12.73,300,90,1.698e-27,3.395e-26,True
+"QLoRA gain, Gemma (4-bit to 4-bit)",gemma_qlora_fair,gemma_zero_4bit,test,0.6255,0.5388,8.67,213,70,5.93e-18,1.127e-16,True
+"Few-shot benefit, Qwen (full)",qwen_fs_full,qwen_zero,test,0.5515,0.5152,3.64,150,90,0.0001299,0.001429,True
+"Compression cost, Qwen",qwen_fs_comp,qwen_fs_full,test,0.4958,0.5515,-5.58,105,197,1.321e-07,2.113e-06,True
+"Compressed few-shot vs zero-shot, Qwen",qwen_fs_comp,qwen_zero,test,0.4958,0.5152,-1.94,124,156,0.06375,0.3581,False
+"Few-shot benefit, Gemma (bf16)",gemma_fs_full,gemma_zero_bf16,test,0.5624,0.5648,-0.24,85,89,0.8202,1.0,False
+"Quantization cost, Gemma",gemma_zero_4bit,gemma_zero_bf16,test,0.5388,0.5648,-2.61,30,73,2.718e-05,0.0003533,True
+"Model gap, fair QLoRA",qwen_qlora,gemma_qlora_fair,test,0.6424,0.6255,1.7,117,89,0.05968,0.3581,False
+Gemma optimized vs Qwen QLoRA,gemma_qlora_opt,qwen_qlora,test,0.6467,0.6424,0.42,108,101,0.6782,1.0,False
+"Truncated evaluation input, Qwen QLoRA",qwen_qlora_trunc,qwen_qlora,test,0.6345,0.6424,-0.79,28,41,0.148,0.5921,False
+"Device control (compressed few-shot, val)",qwen_fs_comp_val_4060,qwen_fs_comp_val_a100,val,0.4709,0.4655,0.55,18,15,0.7283,1.0,False
+qwen_zero vs TF-IDF SVM,qwen_zero,svm,test,0.5152,0.5915,-7.64,205,331,5.851e-08,9.947e-07,True
+qwen_fs_comp vs TF-IDF SVM,qwen_fs_comp,svm,test,0.4958,0.5915,-9.58,200,358,2.225e-11,4.004e-10,True
+qwen_fs_full vs TF-IDF SVM,qwen_fs_full,svm,test,0.5515,0.5915,-4.0,211,277,0.003216,0.03216,True
+qwen_qlora vs TF-IDF SVM,qwen_qlora,svm,test,0.6424,0.5915,5.09,237,153,2.464e-05,0.0003449,True
+gemma_zero_bf16 vs TF-IDF SVM,gemma_zero_bf16,svm,test,0.5648,0.5915,-2.67,219,263,0.05005,0.3503,False
+gemma_zero_4bit vs TF-IDF SVM,gemma_zero_4bit,svm,test,0.5388,0.5915,-5.27,197,284,8.454e-05,0.001015,True
+gemma_fs_full vs TF-IDF SVM,gemma_fs_full,svm,test,0.5624,0.5915,-2.91,215,263,0.03147,0.2518,False
+gemma_qlora_fair vs TF-IDF SVM,gemma_qlora_fair,svm,test,0.6255,0.5915,3.39,235,179,0.006799,0.06119,False
+gemma_qlora_opt vs TF-IDF SVM,gemma_qlora_opt,svm,test,0.6467,0.5915,5.52,238,147,4.083e-06,6.124e-05,True

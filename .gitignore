@@ -1,0 +1,18 @@
+# Data and outputs must never be committed
+data/
+workdir/
+downloads/
+*.parquet
+*.csv
+!results/*.csv
+*.csv.gz
+*.jsonl
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.zip
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store

@@ -1,0 +1,6 @@
+split,n,per_class_min,per_class_max,classes
+train S1 (nested),1100,100,100,11
+train S2 (nested),2200,200,200,11
+train S3 (used),4400,400,400,11
+validation,550,50,50,11
+test,1650,150,150,11

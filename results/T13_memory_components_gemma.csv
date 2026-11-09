@@ -1,0 +1,9 @@
+model,precision,component,parameters,MiB
+Gemma-4-E4B,bf16,vision/audio,478087456,911.9
+Gemma-4-E4B,bf16,embedding (standard),671088640,1280.0
+Gemma-4-E4B,bf16,linear/other,3973352448,7578.6
+Gemma-4-E4B,bf16,PLE (per-layer embedding),2818572288,5376.0
+Gemma-4-E4B,4-bit NF4,vision/audio,247040288,250.8
+Gemma-4-E4B,4-bit NF4,embedding (standard),671088640,1280.0
+Gemma-4-E4B,4-bit NF4,linear/other,1986956288,1895.4
+Gemma-4-E4B,4-bit NF4,PLE (per-layer embedding),2818572288,5376.0

@@ -1,0 +1,5 @@
+model,precision,hardware,weights_MiB,non_quantized_MiB,peak_inference_MiB,activations_MiB,fits_8gb,quantization_saving_pct,non_quantized_share_pct,peak_training_MiB,measurement
+Qwen3.5-4B,fp16,RTX 4060 8188 MiB,8021.8,1214.4,,,no (clean CUDA OOM),,15.1,,06_memory/profile_memory.py (RTX 4060)
+Qwen3.5-4B,4-bit NF4,RTX 4060 8188 MiB,2916.2,1214.4,4494.0,1144.8,yes (peak at 55% of 8188 MiB),63.6,,7055.3,06_memory/profile_memory.py (RTX 4060)
+Gemma-4-E4B,bf16,A100 80 GB,15146.4,6656.0,15610.0,376.1,no,,43.9,,06_memory/colab_B3_gemma_memory.py (A100)
+Gemma-4-E4B,4-bit NF4,A100 80 GB,8802.3,6656.0,9396.0,396.0,no (not even at 4-bit),41.9,,,06_memory/colab_B3_gemma_memory.py (A100)

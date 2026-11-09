@@ -1,0 +1,5 @@
+metric,value
+"all three wrong (SVM, Qwen QLoRA, Gemma QLoRA optimized), %",23.2
+"at least one correct (oracle upper bound), %",76.8
+"Spearman rho, per-class F1 of SVM vs Qwen QLoRA",0.982
+Spearman p,8.4e-08
