@@ -259,7 +259,7 @@ else:
     print("  OK  RerunSklearn", mak["RerunSklearn"])
 
 print("\n" + "=" * 84)
-print("9) FABLE DEGERLENDIRMESI SONRASI EKLENENLER  (11 Kasim 2026)")
+print("9) HAKEM DEGERLENDIRMESI SONRASI EKLENENLER  (11 Kasim 2026)")
 print("=" * 84)
 import math as _m
 _rt = os.path.join(PROJ, "output", "results_tables")
@@ -317,7 +317,7 @@ bildir("QloraHours", _pf(mak["QloraHours"]), float(_t14.at["qwen_qlora", "traini
 bildir("InputWords", _pf(mak["InputWords"]), float(_t22["test input length, words, mean"]), tol=0.5)
 bildir("SvmSec", _pf(mak["SvmSec"]), float(_t22["SVM: TF-IDF fit, training and labeling of the test set, seconds (2-core CPU)"]), tol=0.051)
 
-# 11) ikinci Fable turu: "hep other" tabani, ayristirilamayan ciktilar, terim/lab katmanlari, COPD
+# 11) ikinci hakem turu: "hep other" tabani, ayristirilamayan ciktilar, terim/lab katmanlari, COPD
 bildir("AllOtherAcc", _pf(mak["AllOtherAcc"]), float(_pi[-1]))
 bildir("PrevAccMax", _pf(mak["PrevAccMax"]), max(_yeniden(c)[0] for c in _t06.config.unique() if c not in ("qwen_qlora_trunc",)))
 _t01 = pd.read_csv(os.path.join(_rt, "T01_main_results_test.csv")).set_index("config")

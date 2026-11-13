@@ -245,7 +245,7 @@ qr = mt[mt.model == "Qwen3.5-4B"].set_index("duyarlik")
 kontrol("QwPeak makro <-> memory_table", float(mak["QwPeak"].replace("\\,", "")),
         float(qr.loc["4-bit", "tepe_cikarim_MiB"]), 1.0, " MiB")
 
-# --- Fable turu: yeni metin iddialari (Bolum 4.1-4.3, Tartisma, Sonuc) ---
+# --- hakem turu: yeni metin iddialari (Bolum 4.1-4.3, Tartisma, Sonuc) ---
 _f = lambda k: float(mak[k].replace("\\,", "").replace("\\ensuremath{", "").replace("}", ""))
 _G4 = yuv("Gemma-4-E4B", "4-bit", "agirlik_MiB")
 _GOOGLE_Q4 = 4.5e9 / 2**20   # Google, Gemma 4 model overview: E4B, Q4_0, 4.5 GB (dis kaynak, atifli)
@@ -262,7 +262,7 @@ kontrol("cihaz etkisi karsilastirmalarin isaretini cevirmiyor", 1.0,
         float(min(abs(_f("CompCost")), _f("FullZeroGain")) > max(abs(_f("DevLo")), abs(_f("DevHi")))), 0.0)
 kontrol("SVM sinif basina 100 x 11 sinif = 1100", 1100.0, 100.0 * 11, 0.0)
 
-# --- ikinci Fable turu (12 Kasim 2026) ---
+# --- ikinci hakem turu (12 Kasim 2026) ---
 _rtd = os.path.join(os.path.dirname(BASE), "output", "results_tables")
 _t18 = pd.read_csv(os.path.join(_rtd, "T18_svm_top_features.csv"))
 _top = lambda c: set(_t18[_t18.cls == c].feature)

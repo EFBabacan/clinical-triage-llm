@@ -621,7 +621,7 @@ with open(os.path.join(BASE, "tab_features.tex"), "w", encoding="utf-8") as f:
     f.write("\n".join(tf) + "\n")
 
 
-# ---------------------------------------------------------------- Fable degerlendirmesi (11 Kasim 2026)
+# ---------------------------------------------------------------- hakem degerlendirmesi (11 Kasim 2026)
 T14 = _t("T14_resources_latency.csv").set_index("config")
 T19 = _t("T19_label_gaps.csv")
 T20 = _t("T20_svm_learning_curve.csv").set_index("setting")
@@ -664,7 +664,7 @@ N.update({
     "PgemFewHolm": P("Few-shot benefit, Gemma (bf16)", "p_holm"),
     "PdeviceHolm": P("Device control (compressed few-shot, val)", "p_holm"),
 })
-# ---- ikinci Fable turu (12 Kasim 2026): T24, T25, COPD, "hep other" tabani ----
+# ---- ikinci hakem turu (12 Kasim 2026): T24, T25, COPD, "hep other" tabani ----
 assert abs(accx("lr") - RR["checks"]["lr"]["accuracy"]) < 6e-5 and abs(accx("rf") - RR["checks"]["rf"]["accuracy"]) < 6e-5, \
     "T01'deki LR/RF satirlari yeniden kosuyla ayni degil"
 T24 = _t("T24_term_stratified_recall.csv").set_index("config")
