@@ -9,5 +9,5 @@ gemma_fs_full,Gemma-4-E4B,"few-shot, full (33 ex.)",bf16,A100 80 GB,no,1650,0,0.
 gemma_qlora_fair,Gemma-4-E4B,"QLoRA fair (r=8, q/v, 2 ep.)",4-bit NF4,A100 80 GB,no,1650,1,0.6255,0.6018,0.6485,0.613,0.5911,0.6344
 gemma_qlora_opt,Gemma-4-E4B,"QLoRA optimized (r=16, all linear, 3 ep.)",4-bit NF4,A100 80 GB,no,1650,0,0.6467,0.6233,0.6694,0.6407,0.6172,0.6615
 svm,TF-IDF + linear SVM,supervised (classical),-,CPU,yes (no GPU),1650,0,0.5915,0.5676,0.615,0.5734,0.5501,0.5953
-lr,TF-IDF + logistic regression,supervised (classical),-,CPU,yes (no GPU),1650,0,0.5727,0.5487,0.5964,0.5656,,
-rf,TF-IDF + random forest,supervised (classical),-,CPU,yes (no GPU),1650,0,0.5055,0.4813,0.5295,0.4704,,
+lr,TF-IDF + logistic regression,"supervised (classical); re-run, scikit-learn 1.7.2, random_state 42",-,CPU,yes (no GPU),1650,0,0.5721,0.5481,0.5958,0.5652,0.5423,0.5857
+rf,TF-IDF + random forest,"supervised (classical); re-run, scikit-learn 1.7.2, random_state 42",-,CPU,yes (no GPU),1650,0,0.5152,0.491,0.5392,0.4798,0.456,0.5009

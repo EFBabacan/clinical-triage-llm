@@ -1,0 +1,8 @@
+metric,value
+admissions with a discharge summary and a primary ICD-10 code,122288.0
+"of these, with parsable sections (eligible pool)",118087.0
+"test input length, words, mean",295.2
+"SVM: TF-IDF fit, training and labeling of the test set, seconds (2-core CPU)",2.37
+CPU cores,2.0
+"COPD class in the eligible pool, n",878.0
+"of these, J44.9 (no exacerbation coded), n",35.0

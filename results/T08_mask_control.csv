@@ -3,8 +3,8 @@ metric,value
 "placeholders per test note, mean",2.16
 accuracy from placeholder count alone,0.1358
 chance accuracy (11 balanced classes),0.0909
-SVM accuracy with placeholder (this environment),0.5909
-SVM accuracy without placeholder (this environment),0.5818
-"difference, points",-0.91
-McNemar exact p,0.0489
+SVM accuracy with placeholder (this environment),0.5915
+SVM accuracy without placeholder (this environment),0.5782
+"difference, points",-1.33
+McNemar exact p,0.0026
 scikit-learn version of this control,1.7.2

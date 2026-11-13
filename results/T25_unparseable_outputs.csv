@@ -1,0 +1,4 @@
+config,n_unparseable,begin_with_based_on,name_a_class,at_least_19_tokens,tokens_min,tokens_max,accuracy,accuracy_on_parsed_outputs,accuracy_if_all_unparseable_correct
+qwen_zero,11,0,0,1,1,20,0.515152,0.518609,0.521818
+qwen_fs_comp,2,2,0,2,20,20,0.495758,0.496359,0.49697
+qwen_fs_full,69,69,0,69,19,20,0.551515,0.575585,0.593333

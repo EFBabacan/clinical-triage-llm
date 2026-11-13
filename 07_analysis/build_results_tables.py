@@ -7,6 +7,7 @@ Inputs : workdir/output/  (split JSON files, per-record predictions, training_cu
 Output : workdir/output/results_tables/T01..T14  (aggregate tables only: no note text, no
          record IDs); the released copies are in results/
 Run    : from the workspace root, python /path/to/repo/07_analysis/build_results_tables.py
+         (after 05_classical/tfidf_baselines_rerun.py, which writes the LR and RF predictions)
 """
 import json, os, platform, re
 import numpy as np
@@ -86,13 +87,18 @@ P["qwen_qlora_trunc"] = load("qlora_eval/v4_s3_full_2epoch_lr1e4/test_prediction
 rows = []
 for k, model, method, prec, hw, fits, _ in TEST:
     rows.append(dict(config=k, model=model, method=method, precision=prec, hardware=hw, fits_8gb=fits, **metrics(P[k], "test")))
-cl = pd.read_csv(os.path.join(OUT, "classical_ml_v4/classical_ml_v4_results.csv"))
-for name, key, cfg in [("TF-IDF + logistic regression", "TF-IDF + LR", "lr"), ("TF-IDF + random forest", "TF-IDF + RF", "rf")]:
-    r = cl[cl["Yontem"] == key].iloc[0]; k = int(round(r["Test_Acc"] * 1650)); lo, hi = wilson(k, 1650)
-    rows.append(dict(config=cfg, model=name, method="supervised (classical)",
-                     precision="-", hardware="CPU", fits_8gb="yes (no GPU)", n=1650, n_invalid=0,
-                     accuracy=round(r["Test_Acc"], 4), acc_ci_low=round(lo, 4), acc_ci_high=round(hi, 4),
-                     macro_f1=round(r["Test_MacroF1"], 4), mf1_ci_low=np.nan, mf1_ci_high=np.nan))
+# Logistic regression and random forest: per-record predictions of the re-run
+# (klasik_ml_v4_kayit_tahminleri.py). The original run kept only aggregate scores for these two;
+# the re-run reproduces every SVM prediction, which is checked here.
+ra = pd.read_csv(os.path.join(OUT, "classical_ml_v4/classical_ml_v4_predictions_all_models.csv"))
+rmeta = json.load(open(os.path.join(OUT, "classical_ml_v4/classical_ml_v4_rerun_meta.json"), encoding="utf-8"))
+assert (ra["gercek"].values == gold["test"]).all() and (ra["svm"].values == P["svm"]).all(), \
+    "re-run file does not match the test set or the paper's SVM"
+PC = {c: ra[c].astype(str).values for c in ("lr", "rf")}
+for name, cfg in [("TF-IDF + logistic regression", "lr"), ("TF-IDF + random forest", "rf")]:
+    rows.append(dict(config=cfg, model=name,
+                     method=f"supervised (classical); re-run, scikit-learn {rmeta['sklearn']}, random_state {rmeta['random_state']}",
+                     precision="-", hardware="CPU", fits_8gb="yes (no GPU)", **metrics(PC[cfg], "test")))
 T01 = pd.DataFrame(rows)
 T01.to_csv(os.path.join(DST, "T01_main_results_test.csv"), index=False)
 
@@ -139,9 +145,10 @@ T03.to_csv(os.path.join(DST, "T03_paired_tests.csv"), index=False)
 keys = [k for k, *_ in TEST]
 T04 = pd.DataFrame({k: f1_score(gold["test"], P[k], labels=C, average=None, zero_division=0).round(3) for k in keys}, index=C)
 T04.index.name = "class"; T04.to_csv(os.path.join(DST, "T04_per_class_f1_test.csv"))
-pc = pd.read_csv(os.path.join(OUT, "classical_ml_v4/classical_ml_v4_per_class_f1.csv"))
-T05 = pc.rename(columns={"Sinif": "class"})
-assert np.allclose(T05.set_index("class").loc[C, "TF-IDF + SVM"].values, T04.loc[C, "svm"].values, atol=1e-3), \
+_f1c = lambda p: f1_score(gold["test"], p, labels=C, average=None, zero_division=0).round(3)
+T05 = pd.DataFrame({"class": C, "TF-IDF + LR": _f1c(PC["lr"]), "TF-IDF + SVM": _f1c(P["svm"]), "TF-IDF + RF": _f1c(PC["rf"])})
+pc = pd.read_csv(os.path.join(OUT, "classical_ml_v4/classical_ml_v4_per_class_f1.csv")).rename(columns={"Sinif": "class"})
+assert np.allclose(pc.set_index("class").loc[C, "TF-IDF + SVM"].values, T04.loc[C, "svm"].values, atol=1e-3), \
     "SVM per-class F1: stored aggregate differs from the per-record recomputation"
 T05.to_csv(os.path.join(DST, "T05_classical_per_class_f1.csv"), index=False)
 long = []
@@ -164,7 +171,8 @@ pd.DataFrame([dict(metric="all three wrong (SVM, Qwen QLoRA, Gemma QLoRA optimiz
 # ---- [DIAG_MASKED] control (same environment for both runs) ------------------------
 tr = J("qlora_v4_train_S3.json"); Xtr, ytr = [r["input"] for r in tr], [r["output"] for r in tr]; Xte = [r["input"] for r in test]
 def svm(Xa, Xb):
-    v = TfidfVectorizer(ngram_range=(1, 2), min_df=2, max_features=20000, sublinear_tf=True, lowercase=True)
+    v = TfidfVectorizer(ngram_range=(1, 2), min_df=2, max_features=20000, sublinear_tf=True,
+                        strip_accents="unicode", lowercase=True)  # identical to the paper's SVM (klasik_ml_v4_baseline.py)
     return LinearSVC(C=1.0, class_weight="balanced", random_state=42).fit(v.fit_transform(Xa), ytr).predict(v.transform(Xb))
 tok = "[DIAG_MASKED]"; ct, ce = np.array([t.count(tok) for t in Xtr]), np.array([t.count(tok) for t in Xte])
 oh = lambda c: (np.minimum(c, 10)[:, None] == np.arange(11)[None, :]).astype(float)

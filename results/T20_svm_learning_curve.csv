@@ -1,0 +1,8 @@
+setting,n_labels,repeats,accuracy_mean,accuracy_sd
+"3 per class, random",33,20,0.224394,0.018962
+"10 per class, random",110,20,0.33997,0.017274
+"50 per class, random",550,20,0.467485,0.009831
+"100 per class, random",1100,5,0.511879,0.007208
+"200 per class, random",2200,5,0.543515,0.004716
+"400 per class, random",4400,1,0.591515,0.0
+the 33 few-shot examples (full text),33,1,0.330909,0.0

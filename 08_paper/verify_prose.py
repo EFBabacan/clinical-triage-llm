@@ -81,8 +81,7 @@ GE_4 = mc[mc.config == "4bit"]["MiB"].sum()
 GE_E = mc[(mc.config == "bf16") & mc.bilesen.isin(
     ["PLE (per-layer embedding)", "embedding (standart)"])]["MiB"].sum()
 
-yakala("GemShareAfter makro olarak kullanilmis",
-       r"to \\GemShareAfter\\% of\s*Gemma's quantized weights")
+# (sadelestirme, 12 Kasim 2026: %76 / %42 orani bildiriden cikti)
 
 # ---------------------------------------------------------------------------
 # OKURUN ARITMETIGI. Bildirideki turev sayilar, TABLODA BASILI yuvarlanmis
@@ -135,7 +134,7 @@ def _satir(etiket):
 
 for ad, e1, e2, makro in [
     ("sikistirma bedeli", "Few-shot, compressed", "Few-shot, full", "CompCost"),
-    ("QLoRA kazanci (Qwen)", "QLoRA (fair)", "Zero-shot", "QloraGain"),
+    ("QLoRA kazanci (Qwen)", "QLoRA (shared)", "Zero-shot", "QloraGain"),
 ]:
     a, b = _satir(e1), _satir(e2)
     if a is not None and b is not None:
@@ -157,8 +156,9 @@ for ad, makro, a, b in [
      yuv("Gemma-4-E4B", "4-bit", "agirlik_MiB"), int(mak["GemVA"])),
 ]:
     kontrol(ad, float(mak[makro].replace("\\,", "")), a - b, 0.5, " MiB")
-kontrol("Gemma kulesiz butce asimi", float(mak["GemOverVA"]),
-        float(mak["GemNoVA"].replace("\\,", "")) - 8 * 1024, 0.5, " MiB")
+_kart = float(re.search(r"(\d{4}) MiB", mt[mt.model == "Qwen3.5-4B"]["donanim"].iloc[0]).group(1))
+kontrol("Gemma kulesiz butce asimi (kart 8188 MiB)", float(mak["GemOverVA"]),
+        float(mak["GemNoVA"].replace("\\,", "")) - _kart, 0.5, " MiB")
 
 # Giris'te denklem (1)'e ILERI ATIF olmamali — denklem Bolum IV-C'de tanimli.
 _giris = duz[duz.find("Introduction"):duz.find("Related Work")]
@@ -173,17 +173,15 @@ kontrol("Gemma gomme payi, TAM duyarlik", 44.0, 100 * GE_E / GE_T, 0.6, "%")
 # --- denklem (1) artiklari ---
 tahmin = GE_E + (GE_T - GE_E) / 4
 artik = abs(tahmin - GE_4)
-yakala("denklem (1) artiklari makro",
-       r"differs from the measured 4-bit footprint by \\QwResid\\,MiB for\s*"
-       r"Qwen and \\GemResid\\,MiB for Gemma")
-yakala("denklem (1) girdileri MiB olarak veriliyor",
-       r"Taking \$E\$ from\s*Table~\\ref\{tab:memory\} \(\\QwEmbMiB\\,MiB")
+# (sadelestirme: denklem (1) artik deger tartismasi bildiriden cikti)
 
 # Cihaz kontrolu: discordant ciftler ve p METINDE, makro olarak.
 # Eski metin "3 of those 550" diyordu — net fark 3, ama DEGISEN tahmin 33.
-yakala("cihaz kontrolu discordant ciftleri veriyor",
-       r"changed \\DevDisc\{\} individual predictions.*?\\DevA\{\} against "
-       r"\\DevB\{\} discordant,\s*\$p=\\Pdevice\$")
+yakala("cihaz kontrolu (Ek A): uyumsuz ciftler ve aralik makro",
+       r"\(\\DevA\{\} against \\DevB\{\} discordant, \$p_\{\\mathrm\{Holm\}\}=\\PdeviceHolm\$\).*?"
+       r"\\DevLo\{\} to \\DevHi\{\} points")
+kontrol("cihaz kontrolu: degisen >= uyumsuz", min(float(mak["DevChanged"]), float(mak["DevDisc"])),
+        float(mak["DevDisc"]), 0.5)
 kontrol("cihaz kontrolu: discordant toplami", float(mak["DevDisc"]),
         float(mak["DevA"]) + float(mak["DevB"]), 0.5)
 print(f"     (memory_components toplamindan {artik:.1f} MiB; makro memory_table'dan "
@@ -200,10 +198,13 @@ f = tok(os.path.join(OUT, "b2_b5_verify", "b2_full3shot_test.csv"))
 
 SAYI = {"three": 3, "ten": 10, "eleven": 11, "twelve": 12, "thirteen": 13}
 
-yakala("sikistirilmis/zero-shot kat makro", r"remains \\CompVsZeroTok\{\} times longer")
+# (sadelestirme: "2.3 times longer than zero-shot" cumlesi bildiriden cikti; makro dogrulanmaya devam)
 kontrol("sikistirilmis / zero-shot kat", float(mak["CompVsZeroTok"]), c / z, 0.06, "x")
 
-m = yakala("tam/sikistirilmis kat cumlesi", r"factor of about (\w+) to")
+_kat = re.findall(r"about (\w+) times shorter", duz)
+m = yakala("tam/sikistirilmis kat cumlesi (ozet, giris, sonuc)", r"about (\w+) times shorter")
+kontrol("sikistirma cumlesi uc yerde (ozet, giris, sonuc)", 3.0, float(len(_kat)), 0.0)
+kontrol("uc yerde ayni kat", 1.0, float(len(set(_kat))), 0.0)
 if m:
     if m.group(1) not in SAYI:
         hata += 1
@@ -213,10 +214,7 @@ if m:
 
 # --- gomme payi farki "factor of three" ---
 QW_PAY = float(mt[(mt.model == "Qwen3.5-4B") & (mt.duyarlik == "fp16")]["nicelenmeyen_pay_%"].iloc[0])
-m = yakala("gomme payi orani cumlesi", r"by a factor of (\w+) between")
-if m and m.group(1) in SAYI:
-    kontrol("gomme payi orani (Gemma/Qwen)", SAYI[m.group(1)], (100 * GE_E / GE_T) / QW_PAY,
-            0.35, "x")
+# (sadelestirme: "by a factor of three between our two models" cumlesi bildiriden cikti)
 
 # --- marjinal %95 araligi (Wilson, p=0.5'te en genis) ---
 yakala("marjinal %95 aralik makro", r"\$\\pm\\MarginCI\$ percentage points")
@@ -246,6 +244,43 @@ yakala("cikarim/egitim tepesi makro",
 qr = mt[mt.model == "Qwen3.5-4B"].set_index("duyarlik")
 kontrol("QwPeak makro <-> memory_table", float(mak["QwPeak"].replace("\\,", "")),
         float(qr.loc["4-bit", "tepe_cikarim_MiB"]), 1.0, " MiB")
+
+# --- Fable turu: yeni metin iddialari (Bolum 4.1-4.3, Tartisma, Sonuc) ---
+_f = lambda k: float(mak[k].replace("\\,", "").replace("\\ensuremath{", "").replace("}", ""))
+_G4 = yuv("Gemma-4-E4B", "4-bit", "agirlik_MiB")
+_GOOGLE_Q4 = 4.5e9 / 2**20   # Google, Gemma 4 model overview: E4B, Q4_0, 4.5 GB (dis kaynak, atifli)
+kontrol("Google Q4_0 / bizim 4-bit agirlik ~ yari", 0.5, _GOOGLE_Q4 / _G4, 0.1, "x")
+kontrol("Google Q4_0 < gomme tablolari (16-bit)", 1.0, float(_GOOGLE_Q4 < _f("GemEmbMiB")), 0.0)
+kontrol("SVM 100/sinif (1100 etiket) ~ zero-shot Qwen", _f("ZeroAcc"), _f("SvmLcHundred"), 0.01)
+kontrol("SVM 200/sinif zero-shot Qwen'i geciyor", 1.0, float(_f("SvmLcTwoHundred") > _f("ZeroAcc")), 0.0)
+kontrol("SVM ilk 60 kelime >= %90 tam dogruluk", 1.0, float(_f("SvmTruncSixty") / _f("SvmAcc") >= 0.9), 0.0)
+kontrol("cihaz araligi ~2 puani dislamiyor", 1.0, float(max(abs(_f("DevLo")), abs(_f("DevHi"))) >= 2.0), 0.0)
+kontrol("HTN+HF (other) > HF etiketli", 1.0, float(_f("HtnHfN") > _f("HfN")), 0.0)
+kontrol("tam ornekler Qwen'e yardim ediyor (>0)", 1.0, float(_f("FullZeroGain") > 0), 0.0)
+kontrol("istem sikistirma ~12 kat", 12.0, _f("FullTok") / _f("CompTok"), 0.5, "x")
+kontrol("cihaz etkisi karsilastirmalarin isaretini cevirmiyor", 1.0,
+        float(min(abs(_f("CompCost")), _f("FullZeroGain")) > max(abs(_f("DevLo")), abs(_f("DevHi")))), 0.0)
+kontrol("SVM sinif basina 100 x 11 sinif = 1100", 1100.0, 100.0 * 11, 0.0)
+
+# --- ikinci Fable turu (12 Kasim 2026) ---
+_rtd = os.path.join(os.path.dirname(BASE), "output", "results_tables")
+_t18 = pd.read_csv(os.path.join(_rtd, "T18_svm_top_features.csv"))
+_top = lambda c: set(_t18[_t18.cls == c].feature)
+kontrol("Tablo 6: AKI istisnalari ilk beste (4/5)", 4.0, float(len({"creatinine", "renal failure", "labs", "hyperkalemia"} & _top("AKI"))), 0.0)
+kontrol("Tablo 6: 'urosepsis' sepsis ilk beste", 1.0, float("urosepsis" in _top("SEPSIS")), 0.0)
+kontrol("'hep other' tabani tum yontemlerin ustunde", 1.0, float(_f("AllOtherAcc") > _f("PrevAccMax")), 0.0)
+kontrol("tam few-shot ust siniri ~ SVM ('level')", _f("SvmAcc"), _f("FullUpperAcc"), 0.003)
+kontrol("FullSvmGap <-> FullInvalid (ayristirilamayan ~ fark)", _f("FullSvmGap"), _f("FullInvalid"), 0.3, "p")
+kontrol("terim tahmini: QLoRA en buyuk", _f("TermPtsMax"), _f("TermPtsQlora"), 0.0)
+kontrol("SVM: tabaka tahmini > silme olcumu ('overstates')", 1.0, float(_f("TermPtsSvm") > _f("TermDeltaAbs")), 0.0)
+kontrol("AKI: lab anisi olan > olmayan (QLoRA, zero, SVM)", 1.0,
+        float(_f("AkiLabQlora") > _f("AkiNoLabQlora") and _f("AkiLabZero") > _f("AkiNoLabZero") and _f("AkiLabSvm") > _f("AkiNoLabSvm")), 0.0)
+kontrol("lab silme: AKI recall dusuyor", 1.0, float(_f("AkiRecLab") < _f("AkiRecBase")), 0.0)
+_t13 = pd.read_csv(os.path.join(_rtd, "T13_memory_components_gemma.csv")).set_index(["precision", "component"])["MiB"]
+_kule = _t13[("4-bit NF4", "vision/audio")] - _t13[("bf16", "vision/audio")] / 4
+kontrol("denklem artigi 'nearly all' kulelerde (>= %90)", 1.0, float(_kule / _f("GemResid") >= 0.9), 0.0)
+kontrol("kulelerin dogrusal katmanlari nicelenmis (4-bit < bf16 / 2)", 1.0,
+        float(_t13[("4-bit NF4", "vision/audio")] < _t13[("bf16", "vision/audio")] / 2), 0.0)
 
 print("\n" + "=" * 88)
 print("B) SERBEST SAYI TARAMASI — makroya baglanmamis sayilar")

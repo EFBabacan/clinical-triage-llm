@@ -1,0 +1,21 @@
+metric,value
+"target term in CC or HPI, own class, max over classes, %",15.33
+class with the max share,STROKE
+"target term in CC or HPI, own class, SEPSIS, %",4.0
+"target term in CC or HPI, own class, STROKE, %",15.33
+"target term in CC or HPI, own class, ATRIAL_FIBRILLATION, %",14.67
+"target term in CC or HPI, own class, AKI, %",3.33
+"target term in CC or HPI, own class, PNEUMONIA, %",8.67
+"target term in CC or HPI, own class, UTI, %",2.0
+"target term in CC or HPI, own class, HEART_FAILURE, %",0.0
+"target term in CC or HPI, own class, GI_BLEEDING, %",13.33
+"target term in CC or HPI, own class, DIABETES_COMPLICATION, %",0.67
+"target term in CC or HPI, own class, COPD_EXACERBATION, %",0.0
+"SVM accuracy change, target terms deleted everywhere, points",-0.4242
+"p (exact McNemar, unadjusted), target terms",0.17
+"lab mention in CC or HPI, all test inputs, %",13.15
+"lab mention in CC or HPI, AKI inputs, %",50.0
+"SVM accuracy change, lab mentions deleted from CC and HPI, points",-1.0303
+"p (exact McNemar, unadjusted), lab mentions",0.00091
+"SVM recall for AKI, baseline",0.5133
+"SVM recall for AKI, lab mentions deleted",0.4067

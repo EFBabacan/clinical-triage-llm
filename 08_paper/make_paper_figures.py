@@ -71,11 +71,12 @@ def save(fig, name):
     print("  ", name)
 
 
-def ptxt(p):
+def ptxt(p):  # Holm-adjusted p, formatted as in the paper: scientific below 0.001, two significant digits below 0.1
+    lab = r"p_{\mathrm{Holm}}"
     if p < 1e-3:
         m, e = f"{p:.1e}".split("e")
-        return rf"$p = {m}\times10^{{{int(e)}}}$"
-    return rf"$p = {p:.2f}$"
+        return rf"${lab} = {m}\times10^{{{int(e)}}}$"
+    return rf"${lab} = {p:.2g}$" if p < 0.1 else rf"${lab} = {p:.2f}$"
 
 
 def pts(v):
@@ -119,7 +120,7 @@ print("Figures from", TAB)
 
 # ---- Fig. 1: adaptation methods for both models, against the TF-IDF baseline -------------
 SERIES = [("Qwen3.5-4B", QWEN, "o", "-", -0.07, ["qwen_zero", "qwen_fs_full", "qwen_qlora"]),
-          ("Gemma-4-E4B, fair adapter", GEMMA, "s", GEMMA_LS, 0.07, ["gemma_zero_bf16", "gemma_fs_full", "gemma_qlora_fair"])]
+          ("Gemma-4-E4B, shared adapter", GEMMA, "s", GEMMA_LS, 0.07, ["gemma_zero_bf16", "gemma_fs_full", "gemma_qlora_fair"])]
 ALL1 = ["qwen_zero", "qwen_fs_full", "qwen_qlora", "gemma_zero_bf16", "gemma_fs_full", "gemma_qlora_fair", "gemma_qlora_opt"]
 fig, axes = plt.subplots(1, 2, figsize=(6.9, 2.55))
 for ax, (col, title) in zip(axes, [("accuracy", "(a) Accuracy"), ("macro_f1", "(b) Macro-F1")]):
@@ -144,8 +145,8 @@ for ax, (col, title) in zip(axes, [("accuracy", "(a) Accuracy"), ("macro_f1", "(
     ax.yaxis.set_major_locator(MultipleLocator(0.05))
     tidy(ax, lambda v, _: f"{v:.2f}")
 handles = [Line2D([], [], color=QWEN, marker="o", ms=5.5, lw=1.5, label="Qwen3.5-4B"),
-           Line2D([], [], color=GEMMA, marker="s", ms=5, lw=1.5, ls=GEMMA_LS, mfc="white", mew=1.2, label="Gemma-4-E4B, fair adapter"),
-           Line2D([], [], color=GEMMA, marker="^", ms=6, mfc="white", mew=1.2, ls="none", label="Gemma-4-E4B, optimized adapter"),
+           Line2D([], [], color=GEMMA, marker="s", ms=5, lw=1.5, ls=GEMMA_LS, mfc="white", mew=1.2, label="Gemma-4-E4B, shared adapter"),
+           Line2D([], [], color=GEMMA, marker="^", ms=6, mfc="white", mew=1.2, ls="none", label="Gemma-4-E4B, high-capacity adapter"),
            Line2D([], [], color=INK2, lw=0.9, ls=REF_LS, label="TF-IDF + linear SVM (CPU)")] + FILL_KEY
 fig.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 0.0), ncol=3, handlelength=2.4, columnspacing=1.6)
 fig.subplots_adjust(wspace=0.22)
@@ -161,7 +162,7 @@ for name, color, shape, ls, (z, f), comp in [
     for xi, k in zip([dx, 1 + dx], (z, f)):
         point(ax, xi, k, "accuracy", color, shape)
     r = t3.loc[comp]
-    ax.annotate(f"{pts(r.diff_points)}, {ptxt(r.p_exact)}", (1.04, t1.at[f, "accuracy"]), (9, 0),
+    ax.annotate(f"{pts(r.diff_points)}, {ptxt(r.p_holm)}", (1.04, t1.at[f, "accuracy"]), (9, 0),
                 textcoords="offset points", ha="left", va="center", fontsize=7, color=INK)
 ax.set_xticks([0, 1])
 ax.set_xticklabels(["Zero-shot", "Few-shot (33 examples)"])
@@ -236,7 +237,7 @@ ax.annotate("", xy=(P4["qwen_fs_comp"][0] * 1.25, P4["qwen_fs_comp"][1] + 0.004)
             xytext=(P4["qwen_fs_full"][0] * 0.8, P4["qwen_fs_full"][1] - 0.003),
             arrowprops=dict(arrowstyle="->", color=INK2, lw=0.9, connectionstyle="arc3,rad=0.2"), zorder=2)
 r = t3.loc["Compression cost, Qwen"]
-ax.text(3300, 0.545, f"{pts(r.diff_points)}\nmatched McNemar\n{ptxt(r.p_exact)}", ha="center", va="center",
+ax.text(3300, 0.545, f"{pts(r.diff_points)}\nmatched McNemar\n{ptxt(r.p_holm)}", ha="center", va="center",
         fontsize=6.8, color=INK, linespacing=1.2)
 ax.set_xscale("log")
 ax.set_xlim(550, 45000)
@@ -254,9 +255,9 @@ save(fig, "fig4_prompt_budget_vs_accuracy")
 
 # ---- Fig. 5: per-class F1 of every configuration -----------------------------------------
 COLS = [("svm", "TF-IDF\n+ SVM"),
-        ("qwen_zero", "Zero-\nshot"), ("qwen_fs_comp", "Few-shot,\ncompr."), ("qwen_fs_full", "Few-shot,\nfull"), ("qwen_qlora", "QLoRA,\nfair"),
+        ("qwen_zero", "Zero-\nshot"), ("qwen_fs_comp", "Few-shot,\ncompr."), ("qwen_fs_full", "Few-shot,\nfull"), ("qwen_qlora", "QLoRA,\nshared"),
         ("gemma_zero_bf16", "Zero-shot,\nbf16"), ("gemma_zero_4bit", "Zero-shot,\n4-bit"), ("gemma_fs_full", "Few-shot,\nfull"),
-        ("gemma_qlora_fair", "QLoRA,\nfair"), ("gemma_qlora_opt", "QLoRA,\noptimized")]
+        ("gemma_qlora_fair", "QLoRA,\nshared"), ("gemma_qlora_opt", "QLoRA,\nhigh-capacity")]
 keys = [k for k, _ in COLS]
 order = t4[keys].mean(axis=1).sort_values(ascending=False).index
 mat = np.vstack([t4.loc[order, keys].values, t1.loc[keys, "macro_f1"].values])

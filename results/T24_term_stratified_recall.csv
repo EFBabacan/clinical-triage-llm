@@ -1,0 +1,11 @@
+config,n_target_records_with_term,correct_with_term,recall_with_term,recall_without_term_same_class_mix,accuracy_points_attributable,aki_records_with_lab_mention,aki_recall_with_lab_mention,aki_recall_without_lab_mention
+qwen_zero,93,63,0.677419,0.550549,0.7151,75,0.36,0.026667
+qwen_fs_comp,93,56,0.602151,0.500981,0.5702,75,0.28,0.04
+qwen_fs_full,93,75,0.806452,0.620651,1.0472,75,0.506667,0.093333
+qwen_qlora,93,88,0.946237,0.7296,1.221,75,0.773333,0.413333
+gemma_zero_bf16,93,71,0.763441,0.634725,0.7255,75,0.4,0.053333
+gemma_zero_4bit,93,68,0.731183,0.61176,0.6731,75,0.426667,0.04
+gemma_fs_full,93,77,0.827957,0.619039,1.1775,75,0.493333,0.08
+gemma_qlora_fair,93,83,0.892473,0.714288,1.0043,75,0.786667,0.373333
+gemma_qlora_opt,93,86,0.924731,0.715211,1.1809,75,0.786667,0.32
+svm,93,77,0.827957,0.689892,0.7782,75,0.653333,0.373333

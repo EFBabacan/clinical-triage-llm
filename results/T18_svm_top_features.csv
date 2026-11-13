@@ -1,0 +1,56 @@
+cls,rank,feature,weight
+AKI,1,creatinine,2.16
+AKI,2,renal failure,1.55
+AKI,3,diarrhea,1.46
+AKI,4,labs,1.4
+AKI,5,hyperkalemia,1.38
+ATRIAL_FIBRILLATION,1,palpitations,2.82
+ATRIAL_FIBRILLATION,2,rvr,2.27
+ATRIAL_FIBRILLATION,3,with rvr,2.11
+ATRIAL_FIBRILLATION,4,tachycardia,1.87
+ATRIAL_FIBRILLATION,5,palpitations symptom,1.84
+COPD_EXACERBATION,1,cough,1.71
+COPD_EXACERBATION,2,productive,1.7
+COPD_EXACERBATION,3,complaint dyspnea,1.56
+COPD_EXACERBATION,4,dyspnea,1.4
+COPD_EXACERBATION,5,fev1,1.25
+DIABETES_COMPLICATION,1,hyperglycemia,4.42
+DIABETES_COMPLICATION,2,insulin,2.66
+DIABETES_COMPLICATION,3,hypoglycemia,2.46
+DIABETES_COMPLICATION,4,hyperglycemia symptom,2.23
+DIABETES_COMPLICATION,5,polyuria,2.12
+GI_BLEEDING,1,dark,2.27
+GI_BLEEDING,2,stool,2.11
+GI_BLEEDING,3,blood,2.05
+GI_BLEEDING,4,anemia,2.03
+GI_BLEEDING,5,bleeding,1.9
+HEART_FAILURE,1,dyspnea,1.95
+HEART_FAILURE,2,weight,1.47
+HEART_FAILURE,3,complaint shortness,1.39
+HEART_FAILURE,4,sob,1.39
+HEART_FAILURE,5,torsemide,1.35
+OTHER,1,wound,1.57
+OTHER,2,pain symptom,1.11
+OTHER,3,failed,0.92
+OTHER,4,presents for,0.79
+OTHER,5,erythema,0.77
+PNEUMONIA,1,cough,2.65
+PNEUMONIA,2,cough symptom,1.77
+PNEUMONIA,3,complaint cough,1.58
+PNEUMONIA,4,cough and,1.58
+PNEUMONIA,5,coughing,1.42
+SEPSIS,1,fevers,1.59
+SEPSIS,2,fever symptom,1.48
+SEPSIS,3,fever,1.47
+SEPSIS,4,urosepsis,1.23
+SEPSIS,5,shock,1.2
+STROKE,1,headache,1.77
+STROKE,2,handed,1.45
+STROKE,3,right handed,1.36
+STROKE,4,speech,1.35
+STROKE,5,sided weakness,1.32
+UTI,1,urine,2.21
+UTI,2,dysuria,1.84
+UTI,3,urinary,1.8
+UTI,4,dysuria symptom,1.65
+UTI,5,complaint dysuria,1.39

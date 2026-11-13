@@ -1,0 +1,6 @@
+first_words,acc_full_train_truncated_test,acc_truncated_train_and_test
+60,0.549091,0.557576
+120,0.566667,0.56303
+180,0.580606,0.573939
+240,0.581212,0.57697
+360,0.584848,0.580606

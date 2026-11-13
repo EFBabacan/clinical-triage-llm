@@ -1,0 +1,9 @@
+group,target_class,n_in_other,n_in_target_class
+"hypertensive heart or kidney disease with heart failure (I11.0, I13.0, I13.2)",HEART_FAILURE,3050,1396
+bleeding ulcer (K25-K28 with hemorrhage),GI_BLEEDING,417,909
+diverticular bleeding (K57 with bleeding),GI_BLEEDING,364,909
+"angiodysplasia with bleeding (K55.21, K31.811)",GI_BLEEDING,188,909
+"bleeding varices (I85.01, I85.11)",GI_BLEEDING,9,909
+"pyelonephritis or cystitis (N10, N30)",UTI,254,1217
+aspiration pneumonitis (J69.0),PNEUMONIA,450,1818
+influenza with pneumonia (J09-J11 .x0),PNEUMONIA,169,1818
